@@ -2,7 +2,7 @@
 
 Stringset is used to check whether a string is part of a string slice. At the moment, this is only efficient for large slices, approximately 10000+ elements. Also, this is very memory consuming. For a common english text with around 2400 words, the set takes up about 704kB of memory. You should probably rather use a `map[string]bool` (benchmarks below), which also only uses about 100kB for the same 2400 words (`Benchmark 3`).
 
-However, it should be mentioned, that the performance of the map approach seems to decrease, the farther a word is towards the end of the text (`Benchmark 3`, `MapContains` decreases by `2ns` for different terms), which is why we approximate the feasability of this tool to >10000 elements (not benchmarked).
+However, it should be mentioned, that the performance of the map approach seems to decrease, the farther a word is towards the end of the text (`Benchmark 2`, `MapContains` decreases by `2ns` for different terms), which is why we approximate the feasability of this tool to >10000 elements (not benchmarked).
 
 This tool was created to proof the idea, that such a task can be solved by creating a tree from all letters and checking whether a given path can be walked (exists).
 
