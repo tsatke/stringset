@@ -84,6 +84,18 @@ func BenchmarkNew(b *testing.B) {
 
 	result = set
 }
+func BenchmarkNewMap(b *testing.B) {
+	var m map[string]bool
+
+	for i := 0; i < b.N; i++ {
+		m = make(map[string]bool)
+		for _, t := range content {
+			m[t] = true
+		}
+	}
+
+	result = m
+}
 
 var terms = []string{"Utterson", "Utterson;", "bargain", "question;"}
 
@@ -96,6 +108,12 @@ func BenchmarkSetContains(b *testing.B) {
 func BenchmarkStringSliceContains(b *testing.B) {
 	for _, term := range terms {
 		b.Run(term, _benchmarkStringSliceContains(term))
+	}
+}
+
+func BenchmarkMapContains(b *testing.B) {
+	for _, term := range terms {
+		b.Run(term, _benchmarkMapContains(term))
 	}
 }
 
@@ -132,6 +150,26 @@ func _benchmarkStringSliceContains(term string) func(b *testing.B) {
 					break
 				}
 			}
+		}
+
+		result = contains
+	}
+}
+
+func _benchmarkMapContains(term string) func(b *testing.B) {
+	return func(b *testing.B) {
+		m := make(map[string]bool)
+		for _, t := range content {
+			m[t] = true
+		}
+
+		var contains bool
+
+		b.ReportAllocs()
+		b.ResetTimer()
+
+		for i := 0; i < b.N; i++ {
+			_, contains = m[term]
 		}
 
 		result = contains
