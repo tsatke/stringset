@@ -121,3 +121,24 @@ func TestContains(t *testing.T) {
 	require.False(set.Contains("a"))
 	require.False(set.Contains(";")) // not contained anywhere in the set's tree
 }
+
+func TestEmptySet(t *testing.T) {
+	require := require.New(t)
+
+	set := stringset.New([]string{})
+	require.False(set.Contains("amett"))
+	require.False(set.Contains(""))
+	require.False(set.Contains("a"))
+	require.False(set.Contains(";"))
+}
+
+func TestEmptyStrings(t *testing.T) {
+	require := require.New(t)
+
+	set := stringset.New([]string{"", "a", "ab", "abc"})
+	require.True(set.Contains(""))
+	require.True(set.Contains("a"))
+	require.True(set.Contains("ab"))
+	require.True(set.Contains("abc"))
+	require.False(set.Contains("abcd"))
+}
