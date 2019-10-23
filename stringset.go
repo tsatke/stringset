@@ -1,11 +1,7 @@
 package stringset
 
-import (
-	"fmt"
-	"io"
-	"strconv"
-)
-
+// Stringset represents a set of strings. It can be used to efficiently
+// determine whether a string is part of a previously given string slice.
 type Stringset struct {
 	containsEmpty bool
 	root          *node
@@ -23,6 +19,10 @@ func newNode() *node {
 	}
 }
 
+// New creates a new Stringset from the given string slice. New elements can be
+// added by calling
+//
+//	set.Add(string)
 func New(elements []string) *Stringset {
 	set := &Stringset{
 		root: newNode(),
@@ -33,6 +33,7 @@ func New(elements []string) *Stringset {
 	return set
 }
 
+// Add adds a new element to the Stringset, making it available for checking.
 func (s *Stringset) Add(elem string) {
 	if elem == "" {
 		s.containsEmpty = true
@@ -51,6 +52,8 @@ func (s *Stringset) Add(elem string) {
 	}
 }
 
+// Contains efficiently determines whether the given elem is contained in the
+// previously given string slice or in the added elements.
 func (s *Stringset) Contains(elem string) bool {
 	if elem == "" {
 		return s.containsEmpty
@@ -69,19 +72,4 @@ func (s *Stringset) Contains(elem string) bool {
 		node = next
 	}
 	return true
-}
-
-func (s *Stringset) dump(w io.Writer) {
-	printNode(w, s.root, 0)
-}
-
-func printNode(w io.Writer, n *node, indent int) {
-	for k, v := range n.successors {
-		fmt.Fprintf(w, "%"+strconv.Itoa(indent)+"s", string(k))
-		if n.ends[k] {
-			fmt.Fprint(w, " (end)")
-		}
-		fmt.Fprint(w, "\n")
-		printNode(w, v, indent+1)
-	}
 }
